@@ -7,12 +7,12 @@ const {ViewUtils, isEmpty} = Ember
 const {isSimpleClick} = ViewUtils
 import computed, {readOnly} from 'ember-computed-decorators'
 import {Component} from 'ember-frost-core'
+import TableMixin, {ROW_SELECTION_CLASS} from '../mixins/table'
+import layout from '../templates/components/frost-table-row'
 import {ColumnPropType, ItemPropType} from 'ember-frost-table/typedefs'
 import {PropTypes} from 'ember-prop-types'
 
-import layout from '../templates/components/frost-table-row'
-
-export default Component.extend({
+export default Component.extend(TableMixin, {
   // == Dependencies ==========================================================
 
   // == Keyword Properties ====================================================
@@ -29,6 +29,8 @@ export default Component.extend({
     cellTagName: PropTypes.string,
     columns: PropTypes.arrayOf(ColumnPropType),
     item: ItemPropType,
+    isSelectable: PropTypes.bool,
+    onSelect: PropTypes.func,
 
     // callbacks
     onCallback: PropTypes.func.isRequired
@@ -42,7 +44,8 @@ export default Component.extend({
       cellTagName: 'td',
       cellCss: this.get('css'),
       columns: [],
-      item: {}
+      item: {},
+      isSelectable: false
 
       // state
     }
@@ -64,23 +67,36 @@ export default Component.extend({
   // == DOM Events ============================================================
 
   click (event) {
-    const isRangeSelect = event.shiftKey
-    const isSpecificSelect = false
+    if (this.get('isSelectable')) {
+      const isRangeSelect = event.shiftKey
+      const isSpecificSelect = false
 
-    // Only process simple clicks or clicks with the acceptable modifiers
-    if (isSimpleClick(event) || isRangeSelect) {
-      event.preventDefault()
-      event.stopPropagation()
+      // Only process simple clicks or clicks with the acceptable modifiers
+      if (isSimpleClick(event) || isRangeSelect) {
+        event.preventDefault()
+        event.stopPropagation()
 
-      this.onSelect({
-        isRangeSelect,
-        isSpecificSelect,
-        item: this.get('item')
-      })
+        this.onSelect({
+          isRangeSelect,
+          isSpecificSelect,
+          item: this.get('item')
+        })
+      }
     }
   },
 
   // == Lifecycle Hooks =======================================================
+
+  didInsertElement () {
+    this.setMinimumCellWidths()
+    if (this.get('isSelectable')) {
+      this.$(`.${ROW_SELECTION_CLASS}`).css({
+        'flex-grow': 0,
+        'flex-shrink': 0
+      })
+    }
+    this._super(...arguments)
+  },
 
   // == Actions ===============================================================
 

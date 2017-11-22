@@ -1,3 +1,27 @@
+# 1.5.3 (2017-11-13)
+* #40 - Bind context to call of this._super.included() in index.js
+
+# 1.5.2 (2017-11-06)
+* **Updated** testing dependencies
+* **Removed** unneeded testing packages from `bower.json`
+
+
+# 1.5.1 (2017-08-24)
+ * **Fixed** column alignment issue when new rows were added after first render 
+
+
+# 1.5.0 (2017-08-21)
+ * **Fixed** issue #30 by changing `frost-table` and `frost-fixed-table` components to use a flexbox approach
+ * **Fixed** issue #18 by providing some meaningful tests
+
+
+# 1.4.5 (2017-08-18)
+ * **Fixed** issue #33
+
+
+# 1.4.4 (2017-08-11)
+* Upgrade ember-cli 2.12.3 inter-dependencies
+
 # 1.4.3 (2017-07-31)
  * **Fixed** selection functionality to match `ember-frost-list`
 
