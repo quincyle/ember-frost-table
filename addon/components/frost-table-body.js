@@ -4,12 +4,12 @@
 
 import computed, {readOnly} from 'ember-computed-decorators'
 import {Component} from 'ember-frost-core'
-import {ColumnPropType, ItemsPropType} from 'ember-frost-table/typedefs'
+import TableMixin from '../mixins/table'
+import layout from '../templates/components/frost-table-body'
+import {ItemsPropType} from 'ember-frost-table/typedefs'
 import {PropTypes} from 'ember-prop-types'
 
-import layout from '../templates/components/frost-table-body'
-
-export default Component.extend({
+export default Component.extend(TableMixin, {
   // == Dependencies ==========================================================
 
   // == Keyword Properties ====================================================
@@ -22,7 +22,6 @@ export default Component.extend({
   propTypes: {
 
     // options
-    columns: PropTypes.arrayOf(ColumnPropType),
     items: ItemsPropType,
 
     // callbacks
@@ -54,6 +53,15 @@ export default Component.extend({
   // == DOM Events ============================================================
 
   // == Lifecycle Hooks =======================================================
+
+  didRender () {
+    this.$().css({
+      'flex-grow': 1,
+      'flex-shrink': 1,
+      'flex-basis': `${this.alignColumns('.frost-table-row')}px`
+    })
+    this._super(...arguments)
+  },
 
   // == Actions ===============================================================
 
